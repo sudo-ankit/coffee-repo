@@ -1,0 +1,43 @@
+---
+- name: lab for deploying content
+  hosts: management
+  tasks:
+    - name: fetching some content
+      fetch: 
+        src: /var/log/secure
+        dest: ~/file_manage/secure-backups
+        flat: True
+    - name: copying some content with se_linux content
+      copy:
+        content: "sample content"
+        dest: /home/ankit/user.txt
+        owner: ankit
+        group: ankit
+        mode: 0637
+        setype: samba_share_t
+    - name: editing the se_linux content
+      file:
+        path: /home/ankit/user.txt
+        seuser: _default
+        serole: _default
+        setype: _default
+        selevel: _default
+      tags:
+        - selinux
+    - name: adding a line in file
+      lineinfile:
+        path: /home/ankit/user.txt
+        line: This line was appended by the Ansible playbook
+        state: present
+      tags:
+        - write
+    - name: using block in file module
+      blockinfile:
+        path: /home/ankit/user.txt
+        block: >
+            This block of text consists of two lines.
+            They have been added by the blockinfile module.
+        state: present
+      tags:
+        - append
+

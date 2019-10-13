@@ -1,0 +1,6 @@
+---
+# tasks file for samba
+- name: installing the apache package
+  yum:
+    name: "{{ web_pkg }}"
+    state: latest

@@ -1,0 +1,9 @@
+---
+- name: checking sequencing
+  hosts: management
+  tasks:
+    - name: displaying the output only
+      debug:
+        msg: this contains {{ item }}
+      with_sequence: start=0 end=6 stride=1
+        

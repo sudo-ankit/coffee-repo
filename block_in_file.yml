@@ -1,0 +1,10 @@
+---
+- hosts: management
+  tasks:
+   - name: adding a block in file
+     blockinfile:
+         path: /var/www/html/index.html
+         marker: <!-- {marker} This is a file by ansible\n -->
+         block: |
+             <h1>Welcome to {{ansible_facts.hostname}}</h1>
+             <p>Last updated on {{ansible_facts.date_time.iso8601}}</p>

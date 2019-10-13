@@ -1,0 +1,11 @@
+---
+- hosts: management
+  remote_user: root
+  tasks:
+    - copy:
+        src: test.txt
+        dest: /srv/test43.txt
+        owner: root
+        group: root
+        mode: 0440
+        

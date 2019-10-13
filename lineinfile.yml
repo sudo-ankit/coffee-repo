@@ -1,0 +1,6 @@
+---
+- hosts: management
+  tasks:
+    - name: line in file module
+      lineinfile:
+        

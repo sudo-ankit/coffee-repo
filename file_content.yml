@@ -1,0 +1,11 @@
+---
+- name: using the with files module
+  hosts: management
+  tasks:
+    - debug:
+        msg: "{{ item }}"
+      with_file: 
+        - file1
+        - file2
+        - file3
+

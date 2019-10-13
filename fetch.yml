@@ -1,0 +1,8 @@
+---
+- hosts: management
+  tasks:
+   - name: fetching a file
+     fetch:
+        src: /srv/test43.txt
+        dest: /tmp/
+        flat: yes

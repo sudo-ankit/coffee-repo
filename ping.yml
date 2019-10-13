@@ -1,0 +1,10 @@
+---
+- name: checking connectivity
+  hosts: management
+  tasks:
+   - name: ping and pong
+     ping:
+     register: ping_var
+
+   - debug: 
+      msg: the system gave me a {{ ping_var['ping'] }}

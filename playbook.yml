@@ -1,0 +1,50 @@
+---
+- name: testing variables and other things
+  hosts: management
+  vars:
+    web_pkg: httpd
+    firewall_pkg: firewalld
+    web_service: httpd
+    firewall_service: firewalld
+    python_pkg: python3-PyMySQL
+    rule: http
+  tasks:
+    - name: installing the first two packages
+      ignore_errors: yes
+      yum: 
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - "{{ web_pkg }}"
+        - "{{ firewall_pkg }}"
+        - "{{ python_pkg }}"
+    - name: now starting the service
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - "{{ web_service }}"
+        - "{{ firewall_service }}"
+    - name: adding content file to the httpd service
+      copy: 
+        content: "This file is present"
+        dest: /var/www/html/index.html
+    - name: adding the service through to the firewall port
+      firewalld:
+        service: "{{ rule }}"
+        immediate: true
+        permanent: true
+        state: enabled
+
+- name: checking the connectivity through local host
+  hosts: localhost
+  tasks: 
+    - name: check 1 2 3
+      uri:
+        url: http://node.example.com
+        return_content: yes
+        status_code: 200
+      register: url_value
+    - debug:
+        msg: "{{ url_value['content']}}"

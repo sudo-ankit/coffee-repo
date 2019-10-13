@@ -1,0 +1,33 @@
+---
+- name: handling task failures
+  hosts: management
+  vars:
+    web_pkg: httpd
+    db_pkg: mariadb-server
+    dbservice: mariadb
+  tasks:
+   - name: telling the date
+     command: date
+     register: command_output
+     changed_when: false
+
+   - name: register the debug result
+     debug: 
+      var: command_output.stdout
+   - block:
+     - name: install web package
+       yum: 
+        name: "{{web_pkg}}"
+        state: present
+       failed_when: web_pkg == 'httpd' 
+     rescue:
+     - name: install mariadb package
+       yum:
+        name: "{{db_pkg}}"
+        state: present
+     always:
+     - name: starting the mariadb service
+       service:
+        name: "{{dbservice}}"
+        state: started
+        enabled: yes

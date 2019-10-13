@@ -1,0 +1,41 @@
+---
+- name: Configuring apache server on node machine
+  hosts: management
+  vars:
+    webdocument: /var/www/html
+  tasks:
+    - name: install httpd pkg
+      package:
+         name: httpd
+         state: latest
+
+    - name: create index.html through template
+      template:
+         src: files/index.html.j2
+         dest: "{{ webdocument }}/index.html"
+
+    - name: starting the web service
+      service: 
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: allow httpd to pass through firewall
+      firewalld:
+        service: https
+        state: enabled
+        permanent: yes
+        immediate: yes 
+
+    - name: updating config file using template
+      template: 
+        src: files/httpd.conf.j2
+        dest: /etc/httpd/conf.d/{{ ansible_hostname }}.conf
+      notify:
+
+  handlers:
+    - name: restarting the httpd service
+      service:
+        name: httpd
+        state: restarted
+       

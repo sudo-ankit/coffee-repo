@@ -1,0 +1,27 @@
+---
+- name: testing conditional existence
+  hosts: database
+  tasks: 
+    - name: checking for the service
+      stat: path=/etc/logrotate.d/chrony
+      ignore_errors: yes
+      register: chron_serv
+
+    - debug:
+        var: chron_serv
+
+    - name: start a service if the package is installed
+      service:
+        name: chronyd
+        state: started
+        enabled: yes
+      when: chron_serv['stat']['exists'] == True
+      tags: condition
+
+    - name: install the package if package not installed
+      yum: 
+        name: chrony
+        state: latest
+      when: chron_serv['stat']['exists'] == False
+      tags: condition
+

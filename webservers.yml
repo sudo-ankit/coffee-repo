@@ -1,0 +1,16 @@
+---
+- name: running the file on client through apache
+  hosts: myservers
+  become: yes
+  vars: 
+    description: "{{ansible_default_ipv4.address}}"
+  tasks:
+    - name: adding the index file with template display
+      template: src=template.j2    dest=/var/www/html/index.html
+  tasks:
+    - name: Ensure Apache is started
+      notify: restart apache 
+      service: name=httpd state=started
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted 

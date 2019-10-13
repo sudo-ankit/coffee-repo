@@ -1,0 +1,7 @@
+---
+- name: resolve hosts on the inventory file
+  hosts: london
+  tasks:
+    - name: display given host names
+      debug:
+        msg: "{{ inventory_hostname }}"

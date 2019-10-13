@@ -1,0 +1,49 @@
+---
+- name: doing something 
+  hosts: management
+  tasks:
+    - name: installing a few packages
+      ignore_errors: yes
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - firewalld
+        - httpd
+        - mariadb-server
+        - php
+        - php-mysqlnd
+    - name: configuring the firewall
+      ignore_errors: yes
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+    - name: adding the services to firewall
+      firewalld:
+        service: https
+        permanent: yes
+        immediate: yes
+        state: enabled
+    - name: enabling a few more services
+      service: 
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb
+    - name: testing the content through apache server
+      copy: 
+       content: "This the test page bro"
+       dest: /var/www/html/index.html
+
+- name: testing the web content
+  hosts: localhost
+  tasks:
+   - name: checking something on noddey
+     uri:
+      url: http://node.example.com
+      return_content: yes
+      status_code: 200
+      

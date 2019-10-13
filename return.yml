@@ -1,0 +1,9 @@
+---
+- name: sending out a return signal 
+  hosts: localhost
+  tasks: 
+    - name: testing and sending the signal 
+      uri: 
+          url: http://rhel-server.example.com
+          return_content: yes
+          status_code: 200

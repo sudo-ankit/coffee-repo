@@ -1,0 +1,7 @@
+---
+- name: facts dump
+  hosts: management
+  tasks:
+    - name: Print all the facts
+      debug:
+        var: ansible_facts

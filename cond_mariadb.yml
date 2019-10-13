@@ -1,0 +1,19 @@
+---
+- name: using conditions to install mariadb packages
+  hosts: management
+  vars: 
+    mariadb_pkgs:
+      - mariadb
+      - python
+  tasks:
+    - name: installing the mariadb packages
+      yum: 
+        name: "{{item}}"
+        state: latest
+      loop: "{{mariadb_pkgs}}"
+      when: ansible_distribution == "RedHat" 
+    - name: starting the mariadb service
+      service: 
+        name: mariadb
+        state: started
+        enabled: yes

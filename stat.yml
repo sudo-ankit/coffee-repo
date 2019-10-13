@@ -1,0 +1,9 @@
+---
+- hosts: management
+  tasks:
+    - name: check the status of a given file
+      stat:
+        path: /var/www/html/index.html
+        checksum_algorithm: md5
+      register: result
+    - debug: var=result
